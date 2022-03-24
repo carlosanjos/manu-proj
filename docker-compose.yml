@@ -1,0 +1,28 @@
+version: '3'
+services:
+    api:
+        build: ./docker/api
+        container_name: api-php
+        volumes:
+            - ./:/var/www
+        networks:
+            - backend
+    database:
+        image: mysql:8
+        container_name: database-mysql
+        networks:
+            - backend
+    proxy:
+        image: nginx:1.19
+        container_name: reverse-proxy
+        volumes:
+            - ./docker/proxy:/etc/nginx/conf.d/
+            - ./:/var/www
+        ports:
+            - 80:80
+        networks:
+            - frontend
+            - backend
+networks:
+    frontend:
+    backend:
